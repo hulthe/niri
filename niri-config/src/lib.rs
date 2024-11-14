@@ -74,6 +74,8 @@ pub struct Config {
     pub debug: DebugConfig,
     #[knuffel(children(name = "workspace"))]
     pub workspaces: Vec<Workspace>,
+    #[knuffel(child, default)]
+    pub allow_transparent_lockscreen: bool,
 }
 
 #[derive(knuffel::Decode, Debug, Default, PartialEq)]

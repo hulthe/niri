@@ -3460,22 +3460,26 @@ impl Niri {
                 ));
             }
 
-            // Draw the solid color background.
-            elements.push(
-                SolidColorRenderElement::from_buffer(
-                    &state.lock_color_buffer,
-                    (0, 0),
-                    output_scale,
-                    1.,
-                    Kind::Unspecified,
-                )
-                .into(),
-            );
+            // If we don't allow lockscreen transparency, draw a solid background and_then
+            // short-circuit the render.
+            if !self.config.borrow().allow_transparent_lockscreen {
+                // Draw the solid color background.
+                elements.push(
+                    SolidColorRenderElement::from_buffer(
+                        &state.lock_color_buffer,
+                        (0, 0),
+                        output_scale,
+                        1.,
+                        Kind::Unspecified,
+                    )
+                    .into(),
+                );
 
-            if self.debug_draw_opaque_regions {
-                draw_opaque_regions(&mut elements, output_scale);
+                if self.debug_draw_opaque_regions {
+                    draw_opaque_regions(&mut elements, output_scale);
+                }
+                return elements;
             }
-            return elements;
         }
 
         // Prepare the background element.
